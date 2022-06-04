@@ -1,9 +1,11 @@
 package com.cos.security1.controller;
 
+import com.cos.security1.controller.auth.PrincipalDetails;
 import com.cos.security1.model.User;
 import com.cos.security1.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,7 +44,7 @@ public class IndexController {
     }
 
     @GetMapping("user")
-    public String user(){
+    public @ResponseBody String user(@AuthenticationPrincipal PrincipalDetails principalDetails){
         return "user";
     }
 

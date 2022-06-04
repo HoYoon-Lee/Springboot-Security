@@ -1,6 +1,6 @@
 package com.cos.security1.model;
 
-import lombok.Data;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.Entity;
@@ -9,6 +9,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.sql.Timestamp;
 
+@Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor
 @Data
 @Entity
 public class User {
@@ -23,6 +26,10 @@ public class User {
     private String email;
 
     private String role;
+
+    private String provider;
+
+    private String providerId;
 
     @CreationTimestamp
     private Timestamp timestamp;

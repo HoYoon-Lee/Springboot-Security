@@ -3,6 +3,7 @@ package com.cos.security1.controller.oauth;
 import com.cos.security1.controller.auth.PrincipalDetails;
 import com.cos.security1.controller.oauth.provider.FacebookUserInfo;
 import com.cos.security1.controller.oauth.provider.GoogleUserInfo;
+import com.cos.security1.controller.oauth.provider.NaverUserInfo;
 import com.cos.security1.controller.oauth.provider.OAuth2UserInfo;
 import com.cos.security1.model.User;
 import com.cos.security1.repository.UserRepository;
@@ -34,6 +35,10 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
             case "facebook":
                 System.out.println("facebook 로그인 요청");
                 oAuth2UserInfo = new FacebookUserInfo(oAuth2User.getAttributes());
+                break;
+            case "naver":
+                System.out.println("naver 로그인 요청");
+                oAuth2UserInfo = new NaverUserInfo(oAuth2User.getAttribute("response"));
                 break;
             default:
                 try {

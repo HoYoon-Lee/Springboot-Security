@@ -22,9 +22,4 @@ public class FacebookUserInfo implements OAuth2UserInfo {
     public String getEmail() {
         return (String) attribute.get("email");
     }
-
-    @Override
-    public String getUserName() {
-        return String.join("_", getProvider(), getProviderId());
-    }
 }

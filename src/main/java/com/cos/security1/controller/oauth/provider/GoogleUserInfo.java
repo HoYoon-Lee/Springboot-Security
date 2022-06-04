@@ -22,9 +22,4 @@ public class GoogleUserInfo implements OAuth2UserInfo {
     public String getEmail() {
         return (String) attributes.get("email");
     }
-
-    @Override
-    public String getUserName() {
-        return String.join("_", getProvider(), getProviderId());
-    }
 }

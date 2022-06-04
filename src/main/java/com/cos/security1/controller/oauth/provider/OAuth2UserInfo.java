@@ -6,7 +6,9 @@ public interface OAuth2UserInfo {
     String getProviderId();
     String getProvider();
     String getEmail();
-    String getUserName();
+    default String getUserName(){
+        return String.join("_", getProvider(), getProviderId());
+    }
     default User makeNewUser(String password){
         return User.builder()
                 .providerId(getProviderId())

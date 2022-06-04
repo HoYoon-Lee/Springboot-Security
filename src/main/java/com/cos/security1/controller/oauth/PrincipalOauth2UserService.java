@@ -1,6 +1,9 @@
 package com.cos.security1.controller.oauth;
 
 import com.cos.security1.controller.auth.PrincipalDetails;
+import com.cos.security1.controller.oauth.provider.FacebookUserInfo;
+import com.cos.security1.controller.oauth.provider.GoogleUserInfo;
+import com.cos.security1.controller.oauth.provider.OAuth2UserInfo;
 import com.cos.security1.model.User;
 import com.cos.security1.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,24 +25,29 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         OAuth2User oAuth2User = super.loadUser(userRequest);
 
         String provider = userRequest.getClientRegistration().getRegistrationId();
-        String providerId = oAuth2User.getAttribute("sub");
-        String userName = String.join("_", provider, providerId);
-        String password = encoder.encode("GetInThere");
-        String email = oAuth2User.getAttribute("email");
-        String role = "ROLE_USER";
+        OAuth2UserInfo oAuth2UserInfo;
+        switch (provider){
+            case "google":
+                System.out.println("google 로그인 요청");
+                oAuth2UserInfo = new GoogleUserInfo(oAuth2User.getAttributes());
+                break;
+            case "facebook":
+                System.out.println("facebook 로그인 요청");
+                oAuth2UserInfo = new FacebookUserInfo(oAuth2User.getAttributes());
+                break;
+            default:
+                try {
+                    throw new Exception("지원하지 않는 로그인 방식입니다.");
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+        }
 
-        User user = userRepository.findByUserName(userName);
+        User user = userRepository.findByUserName(oAuth2UserInfo.getUserName());
 
         if(user == null){
-          user = User.builder()
-                  .userName(userName)
-                  .password(password)
-                  .email(email)
-                  .role(role)
-                  .provider(provider)
-                  .providerId(providerId)
-                  .build();
-          userRepository.save(user);
+            user = oAuth2UserInfo.makeNewUser(encoder.encode("GetInThere"));
+            userRepository.save(user);
         }
 
         System.out.println("userRequest: " + userRequest.getClientRegistration());
